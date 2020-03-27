@@ -147,6 +147,13 @@ def discover_mqtt_nodeport_debug(mongodb_svc_name, working_namespace):
 
 def list_available_node_zone():
     api_instance = kubernetes.client.CoreV1Api()
+    # https://github.com/kubernetes-client/python/issues/895
+    from kubernetes.client.models.v1_container_image import V1ContainerImage
+    def names(self, names):
+        self._names = names
+
+    V1ContainerImage.names = V1ContainerImage.names.setter(names)
+
     zones = {}
     try:
         api_response = api_instance.list_node()
